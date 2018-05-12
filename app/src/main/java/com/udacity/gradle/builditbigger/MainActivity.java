@@ -8,15 +8,16 @@ import android.view.MenuItem;
 import android.view.View;
 
 import uby.luca.displaylib.DisplayJokeActivity;
-import uby.luca.jokeslib.JokeTeller;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.AsyncResponseListener {
+    EndpointsAsyncTask endpointsAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
 
@@ -45,9 +46,23 @@ public class MainActivity extends AppCompatActivity {
     public void tellJoke(View view) {
 //        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, JokeTeller.getJoke(), Toast.LENGTH_LONG).show();
-        String joke = JokeTeller.getJoke();
-        Intent i = new Intent(view.getContext(), DisplayJokeActivity.class);
+//        String joke = JokeTeller.getJoke();
+        endpointsAsyncTask=new EndpointsAsyncTask();
+        endpointsAsyncTask.callback =this;
+        endpointsAsyncTask.execute(this);
+
+    }
+
+    @Override
+    public void processFinish(String joke) {
+        Intent i = new Intent(this, DisplayJokeActivity.class);
         i.putExtra("JOKE_KEY", joke);
         startActivity(i);
     }
 }
+
+
+
+
+
+
