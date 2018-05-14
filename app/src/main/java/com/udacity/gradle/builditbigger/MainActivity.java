@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 //        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, JokeTeller.getJoke(), Toast.LENGTH_LONG).show();
 //        String joke = JokeTeller.getJoke();
-        endpointsAsyncTask=new EndpointsAsyncTask();
-        endpointsAsyncTask.callback =this;
+        endpointsAsyncTask = new EndpointsAsyncTask();
+        endpointsAsyncTask.callback = this;
         endpointsAsyncTask.execute(this);
 
     }
