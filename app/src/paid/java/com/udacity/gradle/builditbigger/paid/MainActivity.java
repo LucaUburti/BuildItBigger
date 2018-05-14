@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.udacity.gradle.builditbigger.EndpointsAsyncTask;
 import com.udacity.gradle.builditbigger.R;
@@ -15,12 +16,14 @@ import uby.luca.displaylib.DisplayJokeActivity;
 
 public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.AsyncResponseListener {
     EndpointsAsyncTask endpointsAsyncTask;
-
+    private ProgressBar spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        spinner = findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE);
     }
 
 
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 //        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, JokeTeller.getJoke(), Toast.LENGTH_LONG).show();
 //        String joke = JokeTeller.getJoke();
+        spinner.setVisibility(View.VISIBLE);
         endpointsAsyncTask = new EndpointsAsyncTask();
         endpointsAsyncTask.callback = this;
         endpointsAsyncTask.execute(this);
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
     public void processFinish(String joke) {
         Intent i = new Intent(this, DisplayJokeActivity.class);
         i.putExtra("JOKE_KEY", joke);
+        spinner.setVisibility(View.GONE);
         startActivity(i);
     }
 }

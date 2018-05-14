@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
@@ -22,6 +23,7 @@ import uby.luca.displaylib.DisplayJokeActivity;
 public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.AsyncResponseListener {
     EndpointsAsyncTask endpointsAsyncTask;
     private InterstitialAd mInterstitialAd;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
         MobileAds.initialize(this,
                 "ca-app-pub-3940256099942544~3347511713");
+
+        spinner = findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE);
 
     }
 
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 //Code to be executed when an ad request fails.
-                displayJoke();
+                loadJoke();
             }
 
             @Override
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
             @Override
             public void onAdClosed() {
                 // Code to be executed when when the interstitial ad is closed.
-                displayJoke();
+                loadJoke();
             }
         });
     }
@@ -104,15 +109,17 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 //        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(this, JokeTeller.getJoke(), Toast.LENGTH_LONG).show();
 //        String joke = JokeTeller.getJoke();
+
         if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show(); //displayJoke will be called after the user closes the Ad (or if the Ad doesn't load)
+            mInterstitialAd.show(); //loadJoke will be called after the user closes the Ad (or if the Ad doesn't load)
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.");
-            displayJoke(); //if the ad isn't ready yet, just display the joke
+            loadJoke(); //if the ad isn't ready yet, just display the joke
         }
     }
 
-    private void displayJoke() {
+    private void loadJoke() {
+        spinner.setVisibility(View.VISIBLE);
         endpointsAsyncTask=new EndpointsAsyncTask();
         endpointsAsyncTask.callback =this;
         endpointsAsyncTask.execute(this);
@@ -120,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
     @Override
     public void processFinish(String joke) {
-
         Intent i = new Intent(this, DisplayJokeActivity.class);
         i.putExtra("JOKE_KEY", joke);
+        spinner.setVisibility(View.GONE);
         startActivity(i);
     }
 }
