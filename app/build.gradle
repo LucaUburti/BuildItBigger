@@ -41,7 +41,21 @@ android {
         }
 
     }
+
+
+    task testTask() {
+        dependsOn ":backend:appengineStart"
+        dependsOn ":app:connectedAndroidTest"
+        dependsOn ":backend:appengineStop"
+
+        afterEvaluate {
+            tasks.findByPath(":backend:appengineStop").mustRunAfter tasks.findByPath(":app:connectedAndroidTest")
+            tasks.findByPath(":app:connectedAndroidTest").mustRunAfter tasks.findByPath(":backend:appengineStart")
+        }
+    }
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

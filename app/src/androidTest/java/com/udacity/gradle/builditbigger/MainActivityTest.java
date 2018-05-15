@@ -22,6 +22,9 @@ public class MainActivityTest implements EndpointsAsyncTask.AsyncResponseListene
         if (joke.contains("failed to connect")) {
             Assert.fail("failed to connect!");
         }
+        if (joke.contains("timed out")) {
+            Assert.fail("Connection timed out!");
+        }
 
         Assert.assertNotNull(joke);
     }
